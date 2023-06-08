@@ -1,7 +1,7 @@
 node{
     stage('Build'){
         docker.image('python:2-alpine').inside{
-            sh 'pwd'
+            checkout scm
             sh 'python -m py_compile ./add2vals.py ./calc.py'
 
         }
@@ -9,6 +9,7 @@ node{
     try{
         stage('Test'){
             docker.image('qnib/pytest').inside{
+                checkout scm
                 sh 'py.test --verbose --junit-xml test-reports/results.xml ./sources/test_calc.py'
             }
         }
@@ -18,6 +19,7 @@ node{
     try{
         stage('Deliver'){
             docker.image('cdrx/pyinstaller-linux:python2').inside{
+                checkout scm
                 sh 'pyinstaller --onefile ./sources/add2vals.py'
             }
         }
