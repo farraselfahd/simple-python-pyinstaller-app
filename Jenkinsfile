@@ -1,7 +1,8 @@
 node{
     stage('Build'){
         docker.image('python:2-alpine').inside{
-            sh 'ls ../'
+            sh 'ls ../submission-cicd-pipeline-farraselfahd/'
+            sh 'pwd'
             sh 'python -m py_compile ./sources/add2vals.py ./sources/calc.py'
 
         }
