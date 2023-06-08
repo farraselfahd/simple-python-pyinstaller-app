@@ -21,7 +21,10 @@ node{
             }
         }
         archiveArtifacts 'dist/add2vals'
+    } catch (e){
+        throw e
     }
+
 
     
 }
