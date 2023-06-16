@@ -36,7 +36,7 @@ node{
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
 
                     sshagent(credentials: ['3dfbace7-3486-4fe9-81f7-f1aef58ae4e6']){
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@54.151.250.226 'if test -f "/home/ubuntu/add2vals"; then rm add2vals fi'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@54.151.250.226 'test -f /home/ubuntu/add2vals && rm add2vals'"
                     sh "scp -v -o ForwardAgent=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=1 ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:/home/ubuntu/add2vals"
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@54.151.250.226 './add2vals 20 6' "
                         
