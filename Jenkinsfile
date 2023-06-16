@@ -51,7 +51,7 @@ node{
                 
                 // sh "ssh-agent /bin/bash"
                 sshagent(credentials: '3dfbace7-3486-4fe9-81f7-f1aef58ae4e6'){
-                    sh "ssh -i ${identity} -o StrictHostKeyChecking=no ubuntu@54.151.250.226 uptime"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@54.151.250.226 uptime"
                     sh 'ssh -v user@54.151.250.226'
                     sh "nohup scp ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:/home/ubuntu/"
                     sh "chmod +x add2vals"
