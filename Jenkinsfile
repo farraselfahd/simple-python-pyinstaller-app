@@ -52,7 +52,6 @@ node{
 
                 sh """
                     eval \$(ssh-agent) && ssh-add ${identity} && ssh-add -l &&
-                    chmod +x /home/ubuntu/add2vals
                     ./add2vals 20 6
                 """
 
