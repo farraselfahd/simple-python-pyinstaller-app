@@ -16,10 +16,13 @@ node{
                 sh 'py.test --verbose --junit-xml test-reports/results.xml ./sources/test_calc.py'
             }
         }
-        input message: 'Lanjutkan ke tahap Deploy ?'
     } finally {
         junit 'test-reports/results.xml'
     }  
+    stage('Manual Approval'){
+        input message: 'Lanjutkan ke tahap Deploy ?'
+
+    }
     try{
         withCredentials([sshUserPrivateKey(credentialsId: '3dfbace7-3486-4fe9-81f7-f1aef58ae4e6', keyFileVariable: 'identity',usernameVariable: 'ubuntu')]){
             
