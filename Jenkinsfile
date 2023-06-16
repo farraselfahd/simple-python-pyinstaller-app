@@ -16,7 +16,7 @@ node{
                 sh 'py.test --verbose --junit-xml test-reports/results.xml ./sources/test_calc.py'
             }
         }
-        // input message: 'Lanjutkan ke tahap Deploy ?'
+        input message: 'Lanjutkan ke tahap Deploy ?'
     } finally {
         junit 'test-reports/results.xml'
     }  
@@ -47,7 +47,7 @@ node{
                 // sshCommand remote: remote, command: "chmod +x add2vals"
                 // sshScript remote: remote, script: "./add2vals 20 6"
 
-                sh "scp -i ${identity} -o StrictHostKeyChecking=no ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:"
+                sh "scp -i ${identity} -o StrictHostKeyChecking=no ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:~/"
                 sh "ssh-agent /bin/bash"
 
                 sh """
