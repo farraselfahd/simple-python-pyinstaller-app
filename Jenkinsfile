@@ -1,3 +1,9 @@
+def remote = [:]
+remote.name = "pyinstaller-app"
+remote.host = "54.151.250.226"
+remote.allowAnyHosts = true
+
+
 node{
     stage('Build'){
         docker.image('python:2-alpine').inside{
@@ -18,30 +24,27 @@ node{
         junit 'test-reports/results.xml'
     }  
     try{
-        def remote = [:]
-        remote.name = 'pyinstaller-app'
-        remote.host = '54.151.250.226'
-        remote.user = 'ubuntu'
-        remote.password = ''
-        remote.identityFile = 'jenkins-ec2-connection.pem'
-        remote.allowAnyHosts = true
+        withCredentials([sshUserPrivateKey(credentialsId: '3dfbace7-3486-4fe9-81f7-f1aef58ae4e6', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'ubuntu')]){
+            remote.user = ubuntu
+            remote.identityFile = identity
 
-        withEnv(['VOLUME=$(pwd)/sources:/src','IMAGE=cdrx/pyinstaller-linux:python2']){
-            stage('Deploy'){
-            dir(path: env.BUILD_ID) { 
-                    checkout scm
-                    // unstash(name: 'compiled-results') 
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'" 
+            withEnv(['VOLUME=$(pwd)/sources:/src','IMAGE=cdrx/pyinstaller-linux:python2']){
+                stage('Deploy'){
+                dir(path: env.BUILD_ID) { 
+                        checkout scm
+                        // unstash(name: 'compiled-results') 
+                        sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'" 
+                    }
                 }
-            }
-            archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals" 
-            sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
+                archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals" 
+                sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
 
-            // deploy to ec2
-            sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
-            sshCommand remote: remote, command: "chmod +x add2vals"
-            sshScript remote: remote, script: "./add2vals 20 6"
-            sleep 60
+                // deploy to ec2
+                sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
+                sshCommand remote: remote, command: "chmod +x add2vals"
+                sshScript remote: remote, script: "./add2vals 20 6"
+                sleep 60
+            }
         }
         
     } catch (e){
