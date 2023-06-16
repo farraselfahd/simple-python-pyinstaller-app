@@ -1,7 +1,4 @@
-def remote = [:]
-remote.name = "pyinstaller-app"
-remote.host = "54.151.250.226"
-remote.allowAnyHosts = true
+
 
 
 node{
@@ -39,6 +36,10 @@ node{
                 sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
 
                 // deploy to ec2
+                def remote = [:]
+                remote.name = "pyinstaller-app"
+                remote.host = "54.151.250.226"
+                remote.allowAnyHosts = true
                 remote.user = ubuntu
                 remote.identityFile = identity
                 sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
