@@ -36,24 +36,24 @@ node{
                 sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
 
                 // deploy to ec2
-                // def remote = [:]
-                // remote.name = "pyinstaller-app"
-                // remote.host = "54.151.250.226"
-                // remote.allowAnyHosts = true
-                // remote.user = ubuntu
-                // remote.identityFile = identity
+                def remote = [:]
+                remote.name = "pyinstaller-app"
+                remote.host = "54.151.250.226"
+                remote.allowAnyHosts = true
+                remote.user = "ubuntu"
+                remote.identityFile = identity
 
-                // sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
-                // sshCommand remote: remote, command: "chmod +x add2vals"
-                // sshScript remote: remote, script: "./add2vals 20 6"
+                sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
+                sshCommand remote: remote, command: "chmod +x add2vals"
+                sshScript remote: remote, script: "./add2vals 20 6"
 
-                sh "scp -i ${identity} -o StrictHostKeyChecking=no ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:/home/ubuntu/"
-                sh "ssh-agent /bin/bash"
+                // sh "scp -i ${identity} -o StrictHostKeyChecking=no ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:/home/ubuntu/"
+                // sh "ssh-agent /bin/bash"
 
-                sh """
-                    eval \$(ssh-agent) && ssh-add ${identity} && ssh-add -l &&
-                    ./add2vals 20 6
-                """
+                // sh """
+                //     eval \$(ssh-agent) && ssh-add ${identity} && ssh-add -l &&
+                //     ./add2vals 20 6
+                // """
 
 
                 sleep 60
