@@ -37,7 +37,7 @@ node{
             sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
 
             // deploy to ec2
-            sshPut remote: remote, from: '${env.BUILD_ID}/sources/dist/add2vals', into: '.'
+            sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
             sshCommand remote: remote, command: "chmod +x add2vals"
             sshScript remote: remote, script: "./add2vals 20 6"
             sleep 60
