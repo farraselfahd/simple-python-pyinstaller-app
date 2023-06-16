@@ -16,17 +16,21 @@ node{
     } finally {
         junit 'test-reports/results.xml'
     }  
-    // try{
-    //     stage('Deliver'){
-    //         docker.image('cdrx/pyinstaller-linux:python2').inside{
-    //             checkout scm
-    //             sh 'pyinstaller --onefile ./sources/add2vals.py'
-    //         }
-    //     }
-    //     archiveArtifacts 'dist/add2vals'
-    // } catch (e){
-    //     throw e
-    // }
+    try{
+        stage('Deploy'){
+            environment { 
+                VOLUME = '$(pwd)/sources:/src'
+                IMAGE = 'cdrx/pyinstaller-linux:python2'
+            }
+            dir(path: env.BUILD_ID) { 
+                    unstash(name: 'compiled-results') 
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'" 
+                }
+        }
+        archiveArtifacts 'dist/add2vals'
+    } catch (e){
+        throw e
+    }
 
 
     
