@@ -38,6 +38,7 @@ node{
                     sshagent(credentials: ['3dfbace7-3486-4fe9-81f7-f1aef58ae4e6']){
                     sh "nohup scp -v -o ForwardAgent=yes ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226"
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@54.151.250.226 uptime"
+                    sh "pwd"
                     sh "chmod +x add2vals"
                     sh "./add2vals 20 6"
                     }
