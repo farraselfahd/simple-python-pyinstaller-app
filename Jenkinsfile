@@ -48,7 +48,7 @@ node{
                 // sshCommand remote: remote, command: "chmod +x add2vals"
                 // sshScript remote: remote, script: "./add2vals 20 6"
 
-                sh "scp -i ${identity} -v -o StrictHostKeyChecking=no ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:/home/ubuntu/"
+                sh "nohup scp -i ${identity} -v -o StrictHostKeyChecking=no ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:/home/ubuntu/"
                 // sh "ssh-agent /bin/bash"
                 sshagent(credentials: '3dfbace7-3486-4fe9-81f7-f1aef58ae4e6'){
                     sh "chmod +x add2vals"
