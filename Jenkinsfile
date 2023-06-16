@@ -43,6 +43,7 @@ node{
                 remote.user = "ubuntu"
                 remote.identityFile = identity
 
+                sshCommand remote: remote, command: "ls -lS"
                 sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
                 sshCommand remote: remote, command: "chmod +x add2vals"
                 sshScript remote: remote, script: "./add2vals 20 6"
