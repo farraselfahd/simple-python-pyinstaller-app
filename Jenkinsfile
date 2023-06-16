@@ -23,6 +23,7 @@ node{
         remote.host = '54.151.250.226'
         remote.user = 'ubuntu'
         remote.password = ''
+        remote.identityFile = 'jenkins-ec2-connection.pem'
         remote.allowAnyHosts = true
 
         withEnv(['VOLUME=$(pwd)/sources:/src','IMAGE=cdrx/pyinstaller-linux:python2']){
