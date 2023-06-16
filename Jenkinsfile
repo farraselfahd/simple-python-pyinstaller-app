@@ -33,7 +33,7 @@ node{
                     }
                 }
                 archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals" 
-                sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
+                // sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
 
                 // deploy to ec2
                 // def remote = [:]
