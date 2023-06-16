@@ -34,6 +34,14 @@ node{
                     }
                     archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals" 
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
+
+                    sshagent(credentials: ['3dfbace7-3486-4fe9-81f7-f1aef58ae4e6']){
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@54.151.250.226 uptime"
+                    sh 'ssh -v user@54.151.250.226'
+                    sh "nohup scp ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:/home/ubuntu/"
+                    sh "chmod +x add2vals"
+                    sh "./add2vals 20 6"
+                    }
                 }
                 
 
@@ -52,13 +60,7 @@ node{
 
                 
                 // sh "ssh-agent /bin/bash"
-                sshagent(credentials: ['3dfbace7-3486-4fe9-81f7-f1aef58ae4e6']){
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@54.151.250.226 uptime"
-                    sh 'ssh -v user@54.151.250.226'
-                    sh "nohup scp ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:/home/ubuntu/"
-                    sh "chmod +x add2vals"
-                    sh "./add2vals 20 6"
-                }
+                
                 // sh """
                 //     eval \$(ssh-agent) && ssh-add ${identity} && ssh-add -l &&
                 //     ./add2vals 20 6
