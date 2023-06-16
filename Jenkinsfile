@@ -36,25 +36,28 @@ node{
                 sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
 
                 // deploy to ec2
-                def remote = [:]
-                remote.name = "pyinstaller-app"
-                remote.host = "54.151.250.226"
-                remote.allowAnyHosts = true
-                remote.user = "ubuntu"
-                remote.identityFile = identity
+                // def remote = [:]
+                // remote.name = "pyinstaller-app"
+                // remote.host = "54.151.250.226"
+                // remote.allowAnyHosts = true
+                // remote.user = "ubuntu"
+                // remote.identityFile = identity
 
-                sshCommand remote: remote, command: "ls -lS"
-                sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
-                sshCommand remote: remote, command: "chmod +x add2vals"
-                sshScript remote: remote, script: "./add2vals 20 6"
+                // sshCommand remote: remote, command: "ls -lS"
+                // sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
+                // sshCommand remote: remote, command: "chmod +x add2vals"
+                // sshScript remote: remote, script: "./add2vals 20 6"
 
-                // sh "scp -i ${identity} -o StrictHostKeyChecking=no ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:/home/ubuntu/"
+                sh "scp -i ${identity} -o StrictHostKeyChecking=no ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226:/home/ubuntu/"
                 // sh "ssh-agent /bin/bash"
-
+                sshagent(credentials: '3dfbace7-3486-4fe9-81f7-f1aef58ae4e6'){
+                    sh "chmod +x add2vals"
+                    sh "./add2vals 20 6"
+                }
                 // sh """
                 //     eval \$(ssh-agent) && ssh-add ${identity} && ssh-add -l &&
                 //     ./add2vals 20 6
-                // """
+                // // """
 
 
                 sleep 60
