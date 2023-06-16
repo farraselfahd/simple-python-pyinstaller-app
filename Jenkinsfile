@@ -39,6 +39,8 @@ node{
                     sh "nohup scp -v -o ForwardAgent=yes ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226"
                     sh """
                         ssh -o StrictHostKeyChecking=no ubuntu@54.151.250.226
+                        pwd
+                        ls -l
                         chmod +x add2vals
                         ./add2vals 20 6
                     """
