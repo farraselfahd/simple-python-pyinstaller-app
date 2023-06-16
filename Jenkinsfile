@@ -16,7 +16,7 @@ node{
                 sh 'py.test --verbose --junit-xml test-reports/results.xml ./sources/test_calc.py'
             }
         }
-        input message: 'Lanjutkan ke tahap Deploy ?'
+        // input message: 'Lanjutkan ke tahap Deploy ?'
     } finally {
         junit 'test-reports/results.xml'
     }  
@@ -45,6 +45,8 @@ node{
 
                 //test
                 sh "echo ${identity}"
+                sh "echo identity"
+                sh "echo ${ubuntu}"
 
                 sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
                 sshCommand remote: remote, command: "chmod +x add2vals"
