@@ -25,8 +25,7 @@ node{
     }  
     try{
         withCredentials([sshUserPrivateKey(credentialsId: '3dfbace7-3486-4fe9-81f7-f1aef58ae4e6', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'ubuntu')]){
-            remote.user = ubuntu
-            remote.identityFile = identity
+            
 
             withEnv(['VOLUME=$(pwd)/sources:/src','IMAGE=cdrx/pyinstaller-linux:python2']){
                 stage('Deploy'){
@@ -40,6 +39,8 @@ node{
                 sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
 
                 // deploy to ec2
+                remote.user = ubuntu
+                remote.identityFile = identity
                 sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
                 sshCommand remote: remote, command: "chmod +x add2vals"
                 sshScript remote: remote, script: "./add2vals 20 6"
