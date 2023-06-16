@@ -21,7 +21,7 @@ node{
         junit 'test-reports/results.xml'
     }  
     try{
-        withCredentials([sshUserPrivateKey(credentialsId: '3dfbace7-3486-4fe9-81f7-f1aef58ae4e6', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'ubuntu')]){
+        withCredentials([sshUserPrivateKey(credentialsId: '3dfbace7-3486-4fe9-81f7-f1aef58ae4e6', keyFileVariable: 'identity',usernameVariable: 'ubuntu')]){
             
 
             withEnv(['VOLUME=$(pwd)/sources:/src','IMAGE=cdrx/pyinstaller-linux:python2']){
@@ -36,21 +36,27 @@ node{
                 sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
 
                 // deploy to ec2
-                def remote = [:]
-                remote.name = "pyinstaller-app"
-                remote.host = "54.151.250.226"
-                remote.allowAnyHosts = true
-                remote.user = ubuntu
-                remote.identityFile = identity
+                // def remote = [:]
+                // remote.name = "pyinstaller-app"
+                // remote.host = "54.151.250.226"
+                // remote.allowAnyHosts = true
+                // remote.user = ubuntu
+                // remote.identityFile = identity
 
-                //test
-                sh "echo ${identity}"
-                sh "echo identity"
-                sh "echo ${ubuntu}"
+                // sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
+                // sshCommand remote: remote, command: "chmod +x add2vals"
+                // sshScript remote: remote, script: "./add2vals 20 6"
 
-                sshPut remote: remote, from: "${env.BUILD_ID}/sources/dist/add2vals", into: '.'
-                sshCommand remote: remote, command: "chmod +x add2vals"
-                sshScript remote: remote, script: "./add2vals 20 6"
+                sh "scp -i ${identity} -o StrictHostKeyChecking=no ${env.BUILD_ID}/sources/dist/add2vals ubuntu@54.151.250.226"
+                sh "ssh-agent /bin/bash"
+
+                sh """
+                    eval \$(ssh-agent) && ssh-add ${identity} && ssh-add -l &&
+                    chmod +x add2vals
+                    ./add2vals 20 6
+                """
+
+
                 sleep 60
             }
         }
